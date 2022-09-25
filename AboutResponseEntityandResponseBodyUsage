@@ -1,0 +1,93 @@
+package com.example.demo.controller;
+
+
+import java.util.List;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.dto.User;
+import com.example.demo.service.UserService;
+
+@RestController
+@RequestMapping("/api")
+public class UserController {
+
+	@Autowired
+	UserService service;
+
+//	@GetMapping("/users")
+	@GetMapping("/users")
+	public ResponseEntity<List<User>> getAllUsers() {
+		List<User> user = service.showAllUser();
+		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
+	
+//	@ResponseBody
+//	@GetMapping("/users/find/{id}")
+//	public User getUserById(@PathVariable("id") int id) {
+////		User user = service.findUserById(id);
+//		User user = service.findUserById(id);
+//		return user;
+//	}
+//	
+//	@ResponseBody
+//	@GetMapping("/users/find/{name}")
+//	public List<User> getUserById(@PathVariable("name") String name) {
+////		User user = service.findUserByName(name);
+//		List<User>user = service.findUserByName(name);
+//		return user;
+//	}
+	
+	@GetMapping("/usersearch")
+    @ResponseBody
+    public List<User> search(@RequestBody User et){
+        return service.search(et);
+    }
+
+	@PostMapping("/users")
+	public ResponseEntity<User> createUser(@RequestBody User user) {
+		User newUser = service.insertUser(user);
+		return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+	}
+
+
+
+	@PutMapping("/users")
+	
+	public ResponseEntity<User> updateUser(@RequestBody User userReq) {
+		User updateUser = service.insertUser(userReq);
+		return new ResponseEntity<>(updateUser, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/users/delete/{id}")
+	public void deleteUser(@PathVariable("id") int id) {
+		service.deleteUserById(id);
+	}
+	
+	@GetMapping("/users/max")
+	public int UserMaxId() {
+		return service.getMaxId();
+	}
+//	@PutMapping("/update/{id}")
+//	public ResponseEntity<User> updateEmployee(@PathVariable int id, @RequestBody User userReq){
+//		User user= service.showUserById(id);
+//		User updateUser= service.insertUser(user);
+////		return ResponseEntity.ok(updatedUser);
+//		return new ResponseEntity<>(updateUser,HttpStatus.OK);
+//	}
+	
+	
+}
